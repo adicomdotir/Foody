@@ -1,4 +1,4 @@
-package ir.adicom.foody
+package ir.adicom.foody.data.network
 
 import ir.adicom.foody.models.FoodRecipe
 import retrofit2.Response
