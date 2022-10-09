@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,7 +17,9 @@ import ir.adicom.foody.R
 import ir.adicom.foody.adapters.RecipesAdapter
 import ir.adicom.foody.util.Constants.Companion.API_KEY
 import ir.adicom.foody.util.NetworkResult
+import ir.adicom.foody.util.observeOnce
 import ir.adicom.foody.viewmodels.RecipesViewModel
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment() {
@@ -38,9 +42,23 @@ class RecipesFragment : Fragment() {
         mView = inflater.inflate(R.layout.fragment_recipes, container, false)
 
         setupRecyclerView()
-        requestApiData()
+//        requestApiData()
+        readDatabase()
 
         return mView
+    }
+
+    private fun readDatabase() {
+        lifecycleScope.launch {
+            mainViewModel.readRecipes.observeOnce(viewLifecycleOwner, Observer { database ->
+                if (database.isNotEmpty()) {
+                    mAdapter.setData(database[0].foodRecipe)
+                    hideShimmerEffect()
+                } else {
+                    requestApiData()
+                }
+            })
+        }
     }
 
     private fun setupRecyclerView() {
@@ -68,6 +86,7 @@ class RecipesFragment : Fragment() {
                 }
                 is NetworkResult.Error -> {
                     hideShimmerEffect()
+                    loadDataFromCache()
                     Toast.makeText(
                         requireContext(),
                         response.message.toString(),
@@ -78,6 +97,16 @@ class RecipesFragment : Fragment() {
                     showShimmerEffect()
                 }
             }
+        }
+    }
+
+    private fun loadDataFromCache() {
+        lifecycleScope.launch {
+            mainViewModel.readRecipes.observe(viewLifecycleOwner, Observer { database ->
+                if (database.isNotEmpty()) {
+                    mAdapter.setData(database[0].foodRecipe)
+                }
+            })
         }
     }
 }
