@@ -1,4 +1,4 @@
-package ir.adicom.foody
+package ir.adicom.foody.viewmodels
 
 import android.app.Application
 import android.content.Context
