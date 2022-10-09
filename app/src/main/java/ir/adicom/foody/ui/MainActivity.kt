@@ -2,12 +2,15 @@ package ir.adicom.foody.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import ir.adicom.foody.MainViewModel
 import ir.adicom.foody.R
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +19,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.getRecipes(queries = HashMap<String, String>())
+        viewModel.recipesResponse.observe(this, Observer {
+            println(it.message)
+        })
 
         navController = findNavController(R.id.navHostFragment)
         val appBarConfiguration = AppBarConfiguration(
