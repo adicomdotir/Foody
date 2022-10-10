@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +45,10 @@ class RecipesFragment : Fragment() {
         _binding = FragmentRecipesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
+
+        binding.recipesFab.setOnClickListener {
+            findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+        }
 
         setupRecyclerView()
 //        requestApiData()
