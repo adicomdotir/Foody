@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.adicom.foody.viewmodels.MainViewModel
 import ir.adicom.foody.R
 import ir.adicom.foody.adapters.RecipesAdapter
+import ir.adicom.foody.databinding.FragmentRecipesBinding
 import ir.adicom.foody.util.Constants.Companion.API_KEY
 import ir.adicom.foody.util.NetworkResult
 import ir.adicom.foody.util.observeOnce
@@ -24,10 +25,11 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class RecipesFragment : Fragment() {
 
+    private var _binding: FragmentRecipesBinding? = null
+    private val binding get() = _binding!!
     private lateinit var mainViewModel: MainViewModel
     private lateinit var recipesViewModel: RecipesViewModel
     private val mAdapter by lazy { RecipesAdapter() }
-    private lateinit var mView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,13 +41,15 @@ class RecipesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = inflater.inflate(R.layout.fragment_recipes, container, false)
+        _binding = FragmentRecipesBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.mainViewModel = mainViewModel
 
         setupRecyclerView()
 //        requestApiData()
         readDatabase()
 
-        return mView
+        return binding.root
     }
 
     private fun readDatabase() {
@@ -62,18 +66,17 @@ class RecipesFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        val recyclerview = mView.findViewById<ShimmerRecyclerView>(R.id.recyclerview)
-        recyclerview.adapter = mAdapter
-        recyclerview.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerview.adapter = mAdapter
+        binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
         showShimmerEffect()
     }
 
     private fun showShimmerEffect() {
-        mView.findViewById<ShimmerRecyclerView>(R.id.recyclerview).showShimmer()
+        binding.recyclerview.showShimmer()
     }
 
     private fun hideShimmerEffect() {
-        mView.findViewById<ShimmerRecyclerView>(R.id.recyclerview).hideShimmer()
+        binding.recyclerview.hideShimmer()
     }
 
     private fun requestApiData() {
@@ -108,5 +111,10 @@ class RecipesFragment : Fragment() {
                 }
             })
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
