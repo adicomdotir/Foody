@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -19,9 +20,11 @@ import ir.adicom.foody.R
 import ir.adicom.foody.adapters.RecipesAdapter
 import ir.adicom.foody.databinding.FragmentRecipesBinding
 import ir.adicom.foody.util.Constants.Companion.API_KEY
+import ir.adicom.foody.util.NetworkListener
 import ir.adicom.foody.util.NetworkResult
 import ir.adicom.foody.util.observeOnce
 import ir.adicom.foody.viewmodels.RecipesViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -34,6 +37,8 @@ class RecipesFragment : Fragment() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var recipesViewModel: RecipesViewModel
     private val mAdapter by lazy { RecipesAdapter() }
+
+    private lateinit var networkListener: NetworkListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +55,28 @@ class RecipesFragment : Fragment() {
         binding.mainViewModel = mainViewModel
 
         binding.recipesFab.setOnClickListener {
-            findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+            if (recipesViewModel.networkStatus) {
+                findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+            } else {
+                recipesViewModel.showNetworkStatus()
+            }
         }
 
         setupRecyclerView()
-//        requestApiData()
-        readDatabase()
+
+        recipesViewModel.readBackOnline.asLiveData().observe(viewLifecycleOwner, Observer {
+            recipesViewModel.backOnline = it
+        })
+
+        lifecycleScope.launch {
+            networkListener = NetworkListener()
+            networkListener.checkNetworkAvailability(requireContext())
+                .collect { status ->
+                    recipesViewModel.networkStatus = status
+                    recipesViewModel.showNetworkStatus()
+                    readDatabase()
+                }
+        }
 
         return binding.root
     }
