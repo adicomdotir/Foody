@@ -10,7 +10,9 @@
         <entry key="app/src/main/res/layout/placeholder_row_layout.xml" value="0.32382246376811596" />
         <entry key="app/src/main/res/layout/recipes_bottom_sheet.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/layout/recipes_row_layout.xml" value="0.2776268115942029" />
+        <entry key="app/src/main/res/menu-v26/recipes_menu.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/menu/recipes_menu.xml" value="0.359375" />
       </map>
     </option>
   </component>
