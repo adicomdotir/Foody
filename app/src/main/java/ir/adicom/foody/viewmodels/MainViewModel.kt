@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.adicom.foody.data.Repository
@@ -43,8 +44,10 @@ class MainViewModel @Inject constructor(
     private suspend fun getRecipesSafeCall(queries: Map<String, String>) {
         recipesResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
+            Log.e("getRecipesSafeCall: ", "1")
             try {
                 val response = repository.remote.getRecipes(queries)
+                Log.e("getRecipesSafeCall: ", response.message())
                 recipesResponse.value = handleFoodRecipesResponse(response)
 
                 val foodRecipe = recipesResponse.value!!.data
