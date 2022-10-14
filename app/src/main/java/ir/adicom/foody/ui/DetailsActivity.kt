@@ -14,6 +14,7 @@ import ir.adicom.foody.adapters.PagerAdapter
 import ir.adicom.foody.ui.fragments.ingredients.IngredientsFragment
 import ir.adicom.foody.ui.fragments.instructions.InstructionsFragment
 import ir.adicom.foody.ui.fragments.overview.OverviewFragment
+import ir.adicom.foody.util.Constants
 
 class DetailsActivity : AppCompatActivity() {
     private val args by navArgs<DetailsActivityArgs>()
@@ -38,7 +39,7 @@ class DetailsActivity : AppCompatActivity() {
         titles.add("Instructions")
 
         val resultBundle = Bundle()
-        resultBundle.putParcelable("recipeBundle", args.result)
+        resultBundle.putParcelable(Constants.RECIPE_RESULT_KEY, args.result)
 
         val adapter = PagerAdapter(
             resultBundle,

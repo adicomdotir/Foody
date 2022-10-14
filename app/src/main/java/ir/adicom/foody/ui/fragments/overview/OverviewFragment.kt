@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import coil.load
 import ir.adicom.foody.R
 import ir.adicom.foody.models.Result
+import ir.adicom.foody.util.Constants
 
 class OverviewFragment : Fragment() {
     override fun onCreateView(
@@ -19,7 +20,7 @@ class OverviewFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_overview, container, false)
 
-        val myBundle: Result? = arguments?.getParcelable("recipeBundle")
+        val myBundle: Result? = arguments?.getParcelable(Constants.RECIPE_RESULT_KEY)
 
         view.findViewById<ImageView>(R.id.image).load(myBundle?.image)
         view.findViewById<TextView>(R.id.title_textView).text = myBundle?.title
