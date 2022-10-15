@@ -1,4 +1,4 @@
-package ir.adicom.foody.data.database
+package ir.adicom.foody.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -3,11 +3,8 @@ package ir.adicom.foody.bindingadapters
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import coil.load
-import ir.adicom.foody.R
-import ir.adicom.foody.data.database.RecipesEntity
+import ir.adicom.foody.data.database.entities.RecipesEntity
 import ir.adicom.foody.models.FoodRecipe
 import ir.adicom.foody.util.NetworkResult
 
