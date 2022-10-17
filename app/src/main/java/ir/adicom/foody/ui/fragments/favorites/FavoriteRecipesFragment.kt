@@ -1,15 +1,14 @@
 package ir.adicom.foody.ui.fragments.favorites
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import ir.adicom.foody.R
 import ir.adicom.foody.adapters.FavoriteRecipesAdapter
 import ir.adicom.foody.databinding.FragmentFavoriteRecipesBinding
 import ir.adicom.foody.viewmodels.MainViewModel
@@ -17,8 +16,8 @@ import ir.adicom.foody.viewmodels.MainViewModel
 @AndroidEntryPoint
 class FavoriteRecipesFragment : Fragment() {
 
-    private val mAdapter: FavoriteRecipesAdapter by lazy { FavoriteRecipesAdapter() }
     private val mainViewModel: MainViewModel by viewModels()
+    private val mAdapter: FavoriteRecipesAdapter by lazy { FavoriteRecipesAdapter(requireActivity(), mainViewModel) }
 
     private var _binding: FragmentFavoriteRecipesBinding? = null
     private val binding = _binding!!
@@ -32,6 +31,8 @@ class FavoriteRecipesFragment : Fragment() {
         binding.mainViewModel = mainViewModel
         binding.mAdapter = mAdapter
 
+        setHasOptionsMenu(true)
+
         setupRecyclerView(binding.favoriteRecipesRecyclerView)
 
         mainViewModel.readFavoriteRecipes.observe(viewLifecycleOwner, Observer { favoritesEntity ->
@@ -39,6 +40,17 @@ class FavoriteRecipesFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.favorite_recipes_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.deleteAll_favorite_recipes_menu) {
+            mainViewModel.deleteAllFavoriteRecipes()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
@@ -49,5 +61,6 @@ class FavoriteRecipesFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        mAdapter.clearContextualActionMode()
     }
 }
