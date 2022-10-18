@@ -4,10 +4,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ir.adicom.foody.data.database.entities.FavoritesEntity
+import ir.adicom.foody.data.database.entities.FoodJokeEntity
 import ir.adicom.foody.data.database.entities.RecipesEntity
 
 @Database(
-    entities = [RecipesEntity::class, FavoritesEntity::class],
+    entities = [RecipesEntity::class, FavoritesEntity::class, FoodJokeEntity::class],
     version = 1,
     exportSchema = false
 )
