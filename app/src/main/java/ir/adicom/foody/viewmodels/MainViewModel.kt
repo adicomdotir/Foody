@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
     var readRecipes: LiveData<List<RecipesEntity>> = repository.local.readRecipes().asLiveData()
     var readFavoriteRecipes: LiveData<List<FavoritesEntity>> =
         repository.local.readFavoriteRecipes().asLiveData()
-    var readFoodJoke: LiveData<List<FoodJoke>> = repository.local.readFoodJoke().asLiveData()
+    var readFoodJoke: LiveData<List<FoodJokeEntity>> = repository.local.readFoodJoke().asLiveData()
 
     private fun insertRecipes(recipesEntity: RecipesEntity) =
         viewModelScope.launch(Dispatchers.IO) {
